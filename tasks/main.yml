@@ -3,11 +3,11 @@
 
 - include: persist-debian.yml
   static: no
-  when: ansible_os_family == 'Debian'
+  when: 'ansible_os_family == "Debian"'
 
 - include: persist-redhat.yml
   static: no
-  when: ansible_distribution == 'CentOS'
+  when: 'ansible_distribution == "CentOS"'
 
 - include: persist-opensuse.yml
   static: no
