@@ -1,0 +1,20 @@
+#
+# {{ ansible_managed }}
+#
+[Unit]
+Description=IPv6 firewall with ip6tables
+After=syslog.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/lib64/iptables/ip6tables.init start
+ExecReload=/usr/local/lib64/iptables/ip6tables.init reload
+ExecStop=/usr/local/lib64/iptables/ip6tables.init stop
+Environment=BOOTUP=serial
+Environment=CONSOLETYPE=serial
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=basic.target

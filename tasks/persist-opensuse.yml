@@ -1,0 +1,29 @@
+---
+
+- name: "Systemd-Service-Definitionen anlegen"
+  template: src="openSUSE/systemd/{{ item }}.j2" dest="/etc/systemd/system/{{ item }}" owner=0 group=0 mode=0755
+  with_items:
+    - "iptables.service"
+    - "ip6tables.service"
+  register: service_file
+
+- name: "Systemd Unit-Files neu einlesen"
+  command: systemctl daemon-reload
+  when: service_file.changed
+  
+- name: "Konfigurationsdateien in /etc/default/ anlegen"
+  template: src="openSUSE/etc_default/{{ item }}.j2" dest="/etc/default/{{ item }}" owner=0 group=0 mode=0755
+  with_items:
+    - "iptables-config"
+
+- name: "Verzeichnis /usr/local/lib64/iptables/ anlegen"
+  file: dest="/usr/local/lib64/iptables/" state=directory owner=0 group=0 mode=0755
+
+- name: "Dateien nach /usr/local/lib64/iptables/ kopieren"
+  template: src="openSUSE/{{ item }}.j2" dest="/usr/local/lib64/iptables/{{ item }}" owner=0 group=0 mode=0755
+  with_items:
+    - "functions"
+    - "iptables.init"
+
+- name: "Ensure iptables service is enabled & started"
+  service: name="iptables" enabled="yes" state="restarted"

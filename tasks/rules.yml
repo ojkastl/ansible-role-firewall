@@ -10,6 +10,10 @@
   failed_when: v4_script_load_result.rc != 0 or 'unknown option' in v4_script_load_result.stderr
   when: v4_script|changed
 
+- name: "Save v4 rules on OpenSUSE"
+  shell: /usr/sbin/iptables-save -c > /etc/default/iptables
+  when: v4_script|changed and (ansible_os_family == "Suse" or ansible_os_family == "openSUSE Leap")
+
 - name: Generate v6 rules
   template: src=generated.v6.j2 dest=/etc/iptables.v6.generated owner=root group=root mode=755
   register: v6_script

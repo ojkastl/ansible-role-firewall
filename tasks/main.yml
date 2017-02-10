@@ -8,3 +8,7 @@
 - include: persist-redhat.yml
   static: no
   when: ansible_distribution == 'CentOS'
+
+- include: persist-opensuse.yml
+  static: no
+  when: 'ansible_os_family == "Suse" or ansible_os_family == "openSUSE Leap"'
